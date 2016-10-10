@@ -315,27 +315,6 @@
 
 		return sum;
 	}
-	, getPredictorFromCompression = function (compression) {
-		var predictor;
-		switch (compression) {
-			case jsPDFAPI.image_compression.FAST:
-				predictor = 11;
-				break;
-
-			case jsPDFAPI.image_compression.MEDIUM:
-				predictor = 13;
-				break;
-
-			case jsPDFAPI.image_compression.SLOW:
-				predictor = 14;
-				break;
-
-			default:
-				predictor = 12;
-				break;
-		}
-		return predictor;
-	}
 	, logImg = function(img) {
 		console.log("width: " + img.width);
 		console.log("height: " + img.height);
@@ -515,10 +494,8 @@
 				}
 			}
 
-			var predictor = getPredictorFromCompression(compression);
-
 			if(decode === this.decode.FLATE_DECODE)
-				dp = '/Predictor '+ predictor +' /Colors '+ colors +' /BitsPerComponent '+ bpc +' /Columns '+ img.width;
+				dp = '/Predictor 15 /Colors '+ colors +' /BitsPerComponent '+ bpc +' /Columns '+ img.width;
 			else
 				//remove 'Predictor' as it applies to the type of png filter applied to its IDAT - we only apply with compression
 				dp = '/Colors '+ colors +' /BitsPerComponent '+ bpc +' /Columns '+ img.width;
@@ -530,7 +507,7 @@
 				smask = this.arrayBufferToBinaryString(smask);
 
 			return this.createImageInfo(imageData, img.width, img.height, colorSpace,
-										bpc, decode, imageIndex, alias, dp, trns, pal, smask, predictor);
+										bpc, decode, imageIndex, alias, dp, trns, pal, smask);
 		}
 
 		throw new Error("Unsupported PNG image data, try using JPEG instead.");
