@@ -14,18 +14,23 @@ function loadBinaryResource (url) {
 
 function sendReference (filename, data) {
   const req = new XMLHttpRequest()
+
   req.open('POST', `http://localhost:9090/${filename}`, true)
+  req.setRequestHeader('Content-Type', 'application/octet-stream');
+
   req.onload = e => {
     console.log(e)
   }
   req.send(data)
 }
 
-const resetCreationDate = input =>
-  input.replace(
-    /\/CreationDate \(D:(.*?)\)/,
-    '/CreationDate (D:19871210000000+00\'00\'\)'
-  )
+const resetCreationDate = input => {
+  // input.replace(
+  //   /\/CreationDate \(D:(.*?)\)/,
+  //   '/CreationDate (D:19871210000000+00\'00\'\)'
+  // )
+  return input
+}
 
 /**
  * Find a better way to set this
@@ -37,10 +42,10 @@ window.comparePdf = (actual, expectedFile, suite) => {
     pdf = loadBinaryResource(`/base/tests/${suite}/reference/${expectedFile}`)
   } catch (error) {
     sendReference(`/tests/${suite}/reference/${expectedFile}`, resetCreationDate(actual))
-    pdf = actual
+    return
   }
-  const expected = resetCreationDate(pdf).trim()
-  actual = resetCreationDate(actual.trim())
+  const expected = resetCreationDate(pdf)//.trim()
+  actual = resetCreationDate(actual)
 
-  expect(actual).toEqual(expected)
+  expect(actual == expected).toEqual(true)
 }

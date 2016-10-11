@@ -34,7 +34,7 @@ describe('Acrobat Reader Bugs', () => {
 
     doc.save('output.pdf')
   	
-    //comparePdf(doc.output(), 'png.pdf', 'readers')
+    comparePdf(doc.output('datauristring'), 'broken-png-2.pdf', 'readers')
 
   })
 })
